@@ -11,9 +11,7 @@ class Admin {
 
     public function login($email ,$password){
         $this->db->query('SELECT * FROM admin WHERE email = :email');
-        //bind values
         $this->db->bind(':email' ,$email);
-
         $row = $this->db->single();
 
         $hashed_password = $row->password;
@@ -31,7 +29,6 @@ class Admin {
         $row = $this->db->single();
 
 
-        //check row 
         if($this->db->rowCount() > 0){
             return true;
         }else{
