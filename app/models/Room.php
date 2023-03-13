@@ -59,7 +59,6 @@ class Room{
 
     public function updateRoom($data){
         $this->db->query('UPDATE rooms SET title = :title , type = :type, genre = :genre, description = :description, price = :price , image=:image WHERE id=:id');
-
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':title',$data['title']);
         $this->db->bind(':type',$data['type']);
@@ -74,8 +73,6 @@ class Room{
         }
     }
 
-
-
     public function getRoomById($id){
         $this->db->query('SELECT * FROM rooms WHERE id = :id');
         $this->db->bind(':id', $id);
@@ -86,12 +83,10 @@ class Room{
     public function deleteRoom($id){
         $this->db->query('DELETE FROM rooms WHERE id = :id');
         $this->db->bind(':id', $id);
-        $row = $this->db->single();
-        return $row;
+        return $this->db->single();
     }
 
     public function getAvailableRooms($data){
-
         $this->db->query("SELECT * FROM rooms
         WHERE type = :type
         AND genre = :genre
@@ -101,12 +96,10 @@ class Room{
             OR (date_from <= :date_to AND date_to >= :date_to)
             OR (date_from >= :date_from AND date_to <= :date_to)
         )");
-
         $this->db->bind(':date_from',$data['Check-in']);
         $this->db->bind(':date_to',$data['Check-out']);
         $this->db->bind(':type',$data['type']);
         $this->db->bind(':genre',$data['genre']);
-
         return $this->db->resultSet();
     }
 
@@ -118,7 +111,6 @@ class Room{
             OR (date_from <= :date_to AND date_to >= :date_to)
             OR (date_from >= :date_from AND date_to <= :date_to)
         )');
-
         $this->db->bind(':room_id', $data['room_id']);
         $this->db->bind(':date_from', $data['date_from']);
         $this->db->bind(':date_to', $data['date_to']);
@@ -129,12 +121,10 @@ class Room{
 
     public function addReservation($data){
         $this->db->query('INSERT INTO reservation (user_id, room_id, date_from, date_to) VALUES (:user_id, :room_id, :date_from, :date_to)');
-
         $this->db->bind(':user_id',$data['user_id']);
         $this->db->bind(':room_id',$data['room_id']);
         $this->db->bind(':date_from',$data['date_from']);
         $this->db->bind(':date_to',$data['date_to']);
-
         if($this->db->execute()){
             return true;
         }else{
@@ -143,26 +133,35 @@ class Room{
     }
 
     public function getLastId(){
-
         $this->db->query("SELECT id FROM reservation ORDER BY id DESC LIMIT 1");
         return $this->db->resultSet();
-
     }
 
     public function addGest($info){
-
         $this->db->query('INSERT INTO gest (user_id, reservation_id, fullname, birthday) VALUES (:user_id, :reservation_id, :fullname, :birthday)');
-
         $this->db->bind(':user_id',$info['user_id']);
         $this->db->bind(':reservation_id',$info['reservation_id']);
         $this->db->bind(':fullname',$info['fullname']);
         $this->db->bind(':birthday',$info['birthday']);
-
         if($this->db->execute()){
             return true;
         }else{
             return false;
         }
+    }
+
+    public function getReservationUser($id){
+        $this->db->query("SELECT *
+        FROM reservation
+        WHERE user_id = :user_id ");
+        $this->db->bind(':user_id' , $_SESSION['user_id']);
+        return $this->db->resultSet();
+    }
+
+    public function deleteReservation($id){
+        $this->db->query('DELETE FROM reservation WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
     }
 
 }

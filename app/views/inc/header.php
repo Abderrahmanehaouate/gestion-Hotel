@@ -30,10 +30,10 @@
             <a class="nav-link me-2" href="<?= URLROOT ?>/rooms/rooms">Rooms</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link me-2" href="<?= URLROOT ?>/pages/contact">Contact Us</a>
+            <a class="nav-link me-2" href="<?= URLROOT ?>/rooms/contact">Contact Us</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link me-2" href="<?= URLROOT ?>/pages/about">About</a>
+            <a class="nav-link me-2" href="<?= URLROOT ?>/rooms/about">About</a>
             </li>
         </ul>
         <?php if(isset($_SESSION['user_id']) || isset($_SESSION['admin_id']) ) : ?>

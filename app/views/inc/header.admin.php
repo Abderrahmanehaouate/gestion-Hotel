@@ -29,6 +29,7 @@
         <?php if(isset($_SESSION['admin_id'])) : ?>
 
             <div class="d-flex" >
+                
                 <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2"><a class="nav-link me-2" href="<?= URLROOT ?>/admins/logout">Logout</a></button>
             </div>
 

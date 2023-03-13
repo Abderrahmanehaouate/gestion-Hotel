@@ -1,20 +1,22 @@
-<?php require APPROOT . '/views/inc/header.php'; ?>
+<?php require APPROOT . '/views/inc/header.php';?>
     <!-- check avilability room -->
     <div class="container availability-form" style="margin-top: 5rem;">
 <div class="row">
     <div class="col-lg-12 bg-white shadow p-4 rounded">
         <h5 class="col-lg-3">Check Booking Availability</h5>
-        <form method="POST" action ="<?= URLROOT ?>/rooms/searchRooms">
+        <form method="POST" action ="<?= URLROOT ?>/rooms/search" >
             <div class="row align-items-end">
 
                 <div class="col-lg-3 mb-3">
                     <label class="form-label" style="font-weight: 500;">Check-in</label>
-                    <input type="date" name="Check-in" class="form-control shadow-none">
+                    <input type="date" name="Check-in" min="<?= date('Y-m-d') ?>" class="form-control shadow-none <?php echo (!empty($data['Check-in-err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['Check-in']; ?>">
+                        <span class="invalid-feedback"><?php echo $data['Check-in-err']; ?></span>
                 </div>
 
                 <div class="col-lg-3 mb-3">
                     <label class="form-label" style="font-weight: 500;">Check-out</label>
-                    <input type="date" name="Check-out" class="form-control shadow-none">
+                    <input type="date" name="Check-out" min="<?= date('Y-m-d', strtotime("+1 day")) ?>" class="form-control shadow-none <?php echo (!empty($data['Check-out-err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['Check-out']; ?>">
+                        <span class="invalid-feedback"><?php echo $data['Check-out-err']; ?></span>
                 </div>
 
                 <div class="col-lg-3 mb-3">
@@ -40,6 +42,7 @@
     </div>
 </div>
 </div>
+
 <script>
 
 const select = document.getElementById('select');
@@ -61,57 +64,22 @@ select.addEventListener('change', function() {
                         </select>`;
     }
 });
-
 </script>
 
-<div class="container mt-3">
-    <?php echo flash('room_message'); ?>
-</div>
-
-<div class="container availability-form " style="margin-top: 2rem;">
-    <div class="row overflow-scroll">
-        <!-- //overflow-scroll -->
-        <div class="col-lg-12 p-4 rounded">
-            <h5 class="col-lg-3 mb-2">Reservation Details</h5>
-            <div class="row align-items-end flex-nowrap">
-                    <?php foreach ($data['reservation'] as $reservation): ?>
-                    <div class="col-lg-3 mb-3">
-                        <div class="card-body text-center">
-                            <h6 class="card-text">Check-in: <?= $reservation->date_from ?></h6>
-                            <h6 class="card-text">Check-out: <?= $reservation->date_to ?></h6>
-                            <p class="card-text">Reservation Time: <?= $reservation->reserved_at ?></p>
-                            <button type="button" class="btn btn-warning"> <a href="<?= URLROOT ?>/rooms/deleteReservation/<?= $reservation->id ?>" class="text-decoration-none text-white">Annuler Reservation</a></button>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="container mt-5 mb-5 mb-10 ">
+    <div class="container mt-5 mb-5 mb-10 ">
     <div class="row">
-    <?php foreach ($data['rooms'] as $room): ?>
+
+    <?php echo flash('room_message') ?>
+    <?php if(isset($data['rooms'])){ ?>
+
+        <?php foreach($data['rooms'] as $room) :?>
         <div class="col-lg-4 col-md-6 my-3">
-            <div class="card border-0 shadow" style="    
-                max-width: 360px;
-                min-width: 360px;
-                max-height: 450px;
-                min-height: 450px; 
-                margin: auto;
-                ">
-                <img src="../public/img/<?= $room->image ?>" class="card-img-top img-style" alt="" style="            
-                max-height: 270px;
-                min-height: 270px; ">
+            <div class="card border-0 shadow" style="max-width: 350px; min-with: 350px; margin: auto;">
+                <img src="../public/img/<?= $room->image?>" class="card-img-top img-style" alt="">
                 <div class="card-body">
-                <h5 class="card-title text-center"><?= $room->title ?></h5>
-                <div class="d-flex justify-content-between mt-3 mb-2 mx-2">
-                <h6 class="card-title">Type : <?= $room->type ?></h6>
+                <h5 class="card-title"><?= $room->title ?></h5>
                 <h6 class="mb-4"><?= $room->price ?>$ per night </h6>
-                </div>
-                    <div class="d-flex justify-content-evenly align-items-center mb-2">
+                    <div class="d-flex justify-content-evenly mb-2">
                         <a href="<?= URLROOT ?>/rooms/reservation/<?= $room->type ?>/<?= $room->id ?>" class="btn btn-primary">Order Now</a>
                         <a href="" class="btn btn-sm btn-outline-dark shadow-none">More details</a>
                     </div>
@@ -119,26 +87,20 @@ select.addEventListener('change', function() {
             </div>
         </div>
     <?php endforeach; ?>
+
+
+    <?php }else{ ?>
+        
+        <div class="alert alert-primary" role="alert">
+        <h4 class="alert-heading">Looking for the perfect room for your next event?</h4>
+        <p>Use our search function to easily find available rooms by selecting your preferred time, genre, and room type. Our intuitive search system will quickly show you all the available options, making it easy to find the perfect space for your needs.</p>
+        <hr>
+        <p class="mb-0"> simply use our search function to filter by date, genre, and room type . </p>
+        </div>
+
+<?php } ?> 
+        
     </div>
 </div>
-<?php require APPROOT . '/views/inc/footer.php'; ?>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<?php require APPROOT . '/views/inc/footer.php';?>
